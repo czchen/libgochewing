@@ -2,5 +2,4 @@ language:
     go
 
 script:
-    cd $TRAVIS_BUILD_DIR
-    make test
+    cd $TRAVIS_BUILD_DIR && make test
