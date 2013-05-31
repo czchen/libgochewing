@@ -7,6 +7,7 @@ import (
     "unicode/utf8"
 )
 
+ // FIXME: Phrase tree shall not store phone in every phrase.
 type Word struct {
     word rune
     phone uint16
@@ -19,7 +20,7 @@ type Phrase struct {
 
 type PhraseTreeNode struct {
     children map[uint16] *PhraseTreeNode
-    allPhrase []Phrase
+    allPhrase []*Phrase
 }
 
 type PhraseDictionary struct {
@@ -71,4 +72,44 @@ func newPhraseDictionary() (dict *PhraseDictionary) {
     dict.root = newPhraseTreeNode()
 
     return dict
+}
+
+func (this *PhraseTreeNode) insertPhrase(phrase *Phrase) {
+    if this.allPhrase == nil {
+        this.allPhrase = make([]*Phrase, 0, 1)
+    }
+
+    pos := len(this.allPhrase)
+    if pos >= cap(this.allPhrase) {
+        original := this.allPhrase
+        this.allPhrase = make([]*Phrase, pos, pos + 1)
+        copy(this.allPhrase, original)
+    }
+
+    // FIXME: Use binary search to insert phrase here.
+    this.allPhrase = this.allPhrase[:pos + 1]
+    this.allPhrase[pos] = phrase
+}
+
+func (this *PhraseDictionary) insertPhrase(phrase *Phrase) {
+    current := this.root
+    for _, word := range phrase.phrase {
+        if current.children[word.phone] == nil {
+            current.children[word.phone] = newPhraseTreeNode()
+        }
+        current = current.children[word.phone]
+    }
+    current.insertPhrase(phrase)
+}
+
+func (this *PhraseDictionary) queryPhrase(phoneList []uint16) (phrase []*Phrase){
+    current := this.root
+
+    for _, phone := range phoneList {
+        if current.children[phone] == nil {
+            return nil
+        }
+        current = current.children[phone]
+    }
+    return current.allPhrase
 }
