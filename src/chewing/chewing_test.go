@@ -36,7 +36,7 @@ func TestNew(t *testing.T) {
     }
 }
 
-func Test_New_NoPhraseFile(t *testing.T) {
+func TestNewNoPhraseFile(t *testing.T) {
     logger := TestLogger{t: t}
     params := ChewingParameters{
         phraseFile: "NoSuchFile",
