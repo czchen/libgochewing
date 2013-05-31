@@ -32,7 +32,7 @@ func TestNew(t *testing.T) {
 
     _, err := New(&params)
     if err != nil {
-        t.Errorf("New shall success, but it fails. %s\n", err.Error())
+        t.Errorf("New shall success, but it fails. %s", err.Error())
     }
 }
 

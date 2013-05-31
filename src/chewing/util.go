@@ -54,7 +54,7 @@ var BOPOMOFO_RE = regexp.MustCompile(
 func convertBopomofoToPhone(bopomofo string) (phone uint16, err error) {
     match := BOPOMOFO_RE.FindStringSubmatch(bopomofo)
     if match == nil {
-        return 0, errors.New(fmt.Sprintf("`%s' is not a valid bopomofo\n", bopomofo))
+        return 0, errors.New(fmt.Sprintf("`%s' is not a valid bopomofo", bopomofo))
     }
 
     phone = 0
@@ -67,7 +67,7 @@ func convertBopomofoToPhone(bopomofo string) (phone uint16, err error) {
 
         index := strings.Index(item.literal, current)
         if index == -1 {
-            panic(fmt.Sprintf("`%s' not in `%s'!\n", current, item.literal))
+            panic(fmt.Sprintf("`%s' not in `%s'!", current, item.literal))
         }
 
         // index is byte index, not UTF-8 character index.
@@ -90,7 +90,7 @@ func convertPhoneToBopomofo(phone uint16) (bopomofo string, err error) {
         index *= item.length
 
         if len(item.literal) < int(index) {
-            return "", errors.New(fmt.Sprintf("%d is not a valid phone\n", phone))
+            return "", errors.New(fmt.Sprintf("%d is not a valid phone", phone))
         }
 
         buf.WriteString(item.literal[index - item.length: index])
