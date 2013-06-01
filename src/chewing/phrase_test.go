@@ -71,10 +71,9 @@ func TestInsertAndQuery(t *testing.T) {
         t.Errorf("len of queryPhrase shall be 5")
     }
 
-// FIXME: phrase shall be in order
-//    for i := 0; i < 5; i++ {
-//        if queryPhrase[i] != inputPhrase[i] {
-//            t.Errorf("Phrase index %d mismatch: %s != %s", i, queryPhrase[i], inputPhrase[i])
-//        }
-//    }
+    for i := 0; i < 5; i++ {
+        if queryPhrase[i] != inputPhrase[i] {
+            t.Errorf("Phrase index %d mismatch: %s != %s", i, queryPhrase[i], inputPhrase[i])
+        }
+    }
 }

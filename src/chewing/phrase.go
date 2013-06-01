@@ -79,16 +79,29 @@ func (this *PhraseTreeNode) insertPhrase(phrase *Phrase) {
         this.allPhrase = make([]*Phrase, 0, 1)
     }
 
-    pos := len(this.allPhrase)
-    if pos >= cap(this.allPhrase) {
+    length := len(this.allPhrase)
+    if length >= cap(this.allPhrase) {
         original := this.allPhrase
-        this.allPhrase = make([]*Phrase, pos, pos + 1)
+        this.allPhrase = make([]*Phrase, length, length + 1)
         copy(this.allPhrase, original)
     }
 
-    // FIXME: Use binary search to insert phrase here.
-    this.allPhrase = this.allPhrase[:pos + 1]
-    this.allPhrase[pos] = phrase
+    this.allPhrase = this.allPhrase[:length + 1]
+
+    // binary search
+    begin := 0
+    end := length
+    for begin < end {
+        pos := (begin + end) / 2
+        if phrase.frequency > this.allPhrase[pos].frequency  {
+            end = pos
+        } else {
+            begin = pos + 1
+        }
+    }
+
+    copy(this.allPhrase[begin + 1: length + 1], this.allPhrase[begin: length])
+    this.allPhrase[begin] = phrase
 }
 
 func (this *PhraseDictionary) insertPhrase(phrase *Phrase) {
