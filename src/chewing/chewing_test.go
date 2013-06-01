@@ -1,50 +1,99 @@
 package chewing
 
 import (
+    "io/ioutil"
     "os"
-    "runtime"
-    "path"
     "testing"
 )
 
-type TestLogger struct {
-    t *testing.T
-}
-
-func (this *TestLogger) PrintRuntimeInformation() {
-    _, file, line, ok := runtime.Caller(2)
-    if ok {
-        this.t.Logf("%s:%d", file, line)
-    }
-}
-
-func (this *TestLogger) Printf(format string, v ...interface{}) {
-    this.PrintRuntimeInformation();
-    this.t.Logf(format, v)
-}
-
 func TestNew(t *testing.T) {
-    logger := TestLogger{t: t}
-    params := ChewingParameters{
-        phraseFile: path.Join(os.Getenv("GOPATH"), "data", "tsi.src"),
-        logger: &logger,
+    tmpFile, err := ioutil.TempFile("", "")
+    if err != nil {
+        t.Fatalf("Cannot create temp file: %s", err.Error())
+    }
+    tmpFileName := tmpFile.Name()
+    defer os.Remove(tmpFileName)
+
+    tmpFile.WriteString(
+        "# This is comment\n" +
+        "\x09\x0b\x20測試 5 ㄘㄜˋ ㄕˋ\n" +
+        "側室 4 ㄘㄜˋ ㄕˋ\x09\x0b\x20\n" +
+        "側視 3 ㄘㄜˋ ㄕ # This is commentˋ\n" +
+        "策士 2 ㄘㄜˋ ㄕˋ\n" +
+        "策試 1 ㄘㄜˋ ㄕˋ\n")
+    tmpFile.Close()
+
+    params := ChewingParameters {
+        phraseFile: tmpFileName,
     }
 
-    _, err := New(&params)
+    chewing, err := New(&params)
+    if chewing == nil {
+        t.Error("Shall not return nil")
+    }
     if err != nil {
-        t.Errorf("New shall success, but it fails. %s", err.Error())
+        t.Errorf("Shall not return error %s", err.Error())
     }
 }
 
 func TestNewNoPhraseFile(t *testing.T) {
-    logger := TestLogger{t: t}
     params := ChewingParameters{
         phraseFile: "NoSuchFile",
-        logger: &logger,
     }
 
-    _, err := New(&params)
+    chewing, err := New(&params)
+    if chewing != nil {
+        t.Error("Shall return nil")
+    }
     if err == nil {
-        t.Errorf("New shall fail when there is no phrase file")
+        t.Error("Shall return error")
+    }
+}
+
+func TestNewBadFrequency(t *testing.T) {
+    tmpFile, err := ioutil.TempFile("", "")
+    if err != nil {
+        t.Fatalf("Cannot create temp file: %s", err.Error())
+    }
+    tmpFileName := tmpFile.Name()
+    defer os.Remove(tmpFileName)
+
+    tmpFile.WriteString("測試 a ㄘㄜˋ ㄕˋ\n")
+    tmpFile.Close()
+
+    params := ChewingParameters {
+        phraseFile: tmpFileName,
+    }
+
+    chewing, err := New(&params)
+    if chewing != nil {
+        t.Error("Shall return nil")
+    }
+    if err == nil {
+        t.Error("Shall return error")
+    }
+}
+
+func TestNewBadBopomofo(t *testing.T) {
+    tmpFile, err := ioutil.TempFile("", "")
+    if err != nil {
+        t.Fatalf("Cannot create temp file: %s", err.Error())
+    }
+    tmpFileName := tmpFile.Name()
+    defer os.Remove(tmpFileName)
+
+    tmpFile.WriteString("測試 a ㄘㄜ1 ㄕˋ\n")
+    tmpFile.Close()
+
+    params := ChewingParameters {
+        phraseFile: tmpFileName,
+    }
+
+    chewing, err := New(&params)
+    if chewing != nil {
+        t.Error("Shall return nil")
+    }
+    if err == nil {
+        t.Error("Shall return error")
     }
 }

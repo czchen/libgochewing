@@ -51,7 +51,7 @@ func TestInsertAndQuery(t *testing.T) {
         t.Errorf("newPhrase shall not fail. It fails with %s", err.Error())
     }
 
-    inputPhrase[4], err = newPhrase("側視", 1)
+    inputPhrase[4], err = newPhrase("策試", 1)
     if err != nil {
         t.Errorf("newPhrase shall not fail. It fails with %s", err.Error())
     }
