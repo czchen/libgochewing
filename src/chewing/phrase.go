@@ -3,14 +3,12 @@ package chewing
 import (
     "errors"
     "fmt"
-    "strings"
     "unicode/utf8"
 )
 
  // FIXME: Phrase tree shall not store phone in every phrase.
 type Word struct {
     word rune
-    phone uint16
 }
 
 type Phrase struct {
@@ -27,14 +25,8 @@ type PhraseDictionary struct {
     root *PhraseTreeNode
 }
 
-func newPhrase(str string, bopomofo string, frequency uint32) (phrase *Phrase, err error) {
+func newPhrase(str string, frequency uint32) (phrase *Phrase, err error) {
     strLen := utf8.RuneCountInString(str)
-    bopomofoArray := strings.Split(bopomofo, " ")
-    bopomofoLen := len(bopomofoArray)
-
-    if strLen != bopomofoLen {
-        return nil, errors.New(fmt.Sprintf("len(%s) = %d, len(%s) = %d", str, strLen, bopomofo, bopomofoLen))
-    }
 
     phrase = new(Phrase)
     phrase.phrase = make([]Word, strLen)
@@ -45,13 +37,7 @@ func newPhrase(str string, bopomofo string, frequency uint32) (phrase *Phrase, e
             return nil, errors.New(fmt.Sprintf("`%s' contains invalid UTF8 character", str))
         }
 
-        phone, err := convertBopomofoToPhone(bopomofoArray[i])
-        if err != nil {
-            return nil, err
-        }
-
         phrase.phrase[i].word = r
-        phrase.phrase[i].phone = phone
 
         str = str[size:]
     }
@@ -104,21 +90,21 @@ func (this *PhraseTreeNode) insertPhrase(phrase *Phrase) {
     this.allPhrase[begin] = phrase
 }
 
-func (this *PhraseDictionary) insertPhrase(phrase *Phrase) {
+func (this *PhraseDictionary) insertPhrase(phrase *Phrase, phoneSeq []uint16) {
     current := this.root
-    for _, word := range phrase.phrase {
-        if current.children[word.phone] == nil {
-            current.children[word.phone] = newPhraseTreeNode()
+    for _, phone := range phoneSeq {
+        if current.children[phone] == nil {
+            current.children[phone] = newPhraseTreeNode()
         }
-        current = current.children[word.phone]
+        current = current.children[phone]
     }
     current.insertPhrase(phrase)
 }
 
-func (this *PhraseDictionary) queryPhrase(phoneList []uint16) (phrase []*Phrase){
+func (this *PhraseDictionary) queryPhrase(phoneSeq []uint16) (phrase []*Phrase){
     current := this.root
 
-    for _, phone := range phoneList {
+    for _, phone := range phoneSeq {
         if current.children[phone] == nil {
             return nil
         }
