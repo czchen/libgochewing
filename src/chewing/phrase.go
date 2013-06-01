@@ -59,7 +59,21 @@ func newPhraseDictionary() (dict *PhraseDictionary) {
     return dict
 }
 
-func (this *PhraseTreeNode) insertPhrase(phrase *Phrase) {
+func isTheSamePhrase(x *Phrase, y *Phrase) bool {
+    if len(x.phrase) != len(y.phrase) {
+        return false
+    }
+
+    for i := 0; i < len(x.phrase); i++ {
+        if x.phrase[i].word != y.phrase[i].word {
+            return false
+        }
+    }
+
+    return true
+}
+
+func (this *PhraseTreeNode) insertPhrase(phrase *Phrase) (err error) {
     if this.allPhrase == nil {
         this.allPhrase = make([]*Phrase, 0, 1)
     }
@@ -71,25 +85,26 @@ func (this *PhraseTreeNode) insertPhrase(phrase *Phrase) {
         copy(this.allPhrase, original)
     }
 
-    this.allPhrase = this.allPhrase[:length + 1]
+    pos := 0
 
-    // binary search
-    begin := 0
-    end := length
-    for begin < end {
-        pos := (begin + end) / 2
-        if phrase.frequency > this.allPhrase[pos].frequency  {
-            end = pos
-        } else {
-            begin = pos + 1
+    for i := 0; i < length; i++ {
+        if isTheSamePhrase(this.allPhrase[i], phrase) {
+            return errors.New(fmt.Sprintf("Phrase %s already in phrase tree", phrase.phrase))
+        }
+
+        if phrase.frequency < this.allPhrase[i].frequency {
+            pos = i + 1
         }
     }
 
-    copy(this.allPhrase[begin + 1: length + 1], this.allPhrase[begin: length])
-    this.allPhrase[begin] = phrase
+    this.allPhrase = this.allPhrase[:length + 1]
+    copy(this.allPhrase[pos + 1: length + 1], this.allPhrase[pos: length])
+    this.allPhrase[pos] = phrase
+
+    return nil
 }
 
-func (this *PhraseDictionary) insertPhrase(phrase *Phrase, phoneSeq []uint16) {
+func (this *PhraseDictionary) insertPhrase(phrase *Phrase, phoneSeq []uint16) (err error) {
     current := this.root
     for _, phone := range phoneSeq {
         if current.children[phone] == nil {
@@ -97,7 +112,7 @@ func (this *PhraseDictionary) insertPhrase(phrase *Phrase, phoneSeq []uint16) {
         }
         current = current.children[phone]
     }
-    current.insertPhrase(phrase)
+    return current.insertPhrase(phrase)
 }
 
 func (this *PhraseDictionary) queryPhrase(phoneSeq []uint16) (phrase []*Phrase){

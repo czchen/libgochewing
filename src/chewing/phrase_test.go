@@ -56,14 +56,43 @@ func TestInsertAndQuery(t *testing.T) {
         t.Errorf("newPhrase shall not fail. It fails with %s", err.Error())
     }
 
+    duplicatedPhrase, err := newPhrase("測試", 5)
+    if err != nil {
+        t.Errorf("newPhrase shall not fail. It fails with %s", err.Error())
+    }
+
     dict := newPhraseDictionary()
     phoneSeq := []uint16{ 10268, 8708 }
 
-    dict.insertPhrase(inputPhrase[4], phoneSeq)
-    dict.insertPhrase(inputPhrase[3], phoneSeq)
-    dict.insertPhrase(inputPhrase[2], phoneSeq)
-    dict.insertPhrase(inputPhrase[1], phoneSeq)
-    dict.insertPhrase(inputPhrase[0], phoneSeq)
+    err = dict.insertPhrase(inputPhrase[4], phoneSeq)
+    if err != nil {
+        t.Errorf("insertPhrase shall success")
+    }
+
+    err = dict.insertPhrase(inputPhrase[3], phoneSeq)
+    if err != nil {
+        t.Errorf("insertPhrase shall success")
+    }
+
+    err = dict.insertPhrase(inputPhrase[2], phoneSeq)
+    if err != nil {
+        t.Errorf("insertPhrase shall success")
+    }
+
+    err = dict.insertPhrase(inputPhrase[1], phoneSeq)
+    if err != nil {
+        t.Errorf("insertPhrase shall success")
+    }
+
+    err = dict.insertPhrase(inputPhrase[0], phoneSeq)
+    if err != nil {
+        t.Errorf("insertPhrase shall success")
+    }
+
+    err = dict.insertPhrase(duplicatedPhrase, phoneSeq)
+    if err == nil {
+        t.Errorf("insertPhrase shall reject duplicated phrase")
+    }
 
     queryPhrase := dict.queryPhrase([]uint16{ 10268, 8708 })
     if len(queryPhrase) != 5 {
