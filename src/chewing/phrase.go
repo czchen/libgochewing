@@ -6,7 +6,6 @@ import (
     "unicode/utf8"
 )
 
- // FIXME: Phrase tree shall not store phone in every phrase.
 type Word struct {
     word rune
 }
