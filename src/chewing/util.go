@@ -98,3 +98,21 @@ func convertPhoneToBopomofo(phone uint16) (bopomofo string, err error) {
 
     return buf.String(), nil
 }
+
+func calculateHammingDistance(x []uint16, y[]uint16) (distance uint8, err error) {
+    if len(x) != len(y) {
+        return distance, errors.New(fmt.Sprintf("Cannot calculate hamming distance between %s and %s. Different length.", x, y))
+    }
+
+    for i := 0; i < len(x); i++ {
+        for _, item := range BOPOMOFO_TABLE {
+            xx := (x[i] >> item.shift) & item.mask
+            yy := (y[i] >> item.shift) & item.mask
+            if xx != yy {
+                distance++
+            }
+        }
+    }
+
+    return distance, nil
+}
