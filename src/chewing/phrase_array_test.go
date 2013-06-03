@@ -95,7 +95,7 @@ func TestPhraseArrayInsert(t *testing.T) {
         t.Errorf("insert shall reject duplicated phrase")
     }
 
-    if comparePhoneSeq(phraseArray.array[0].phoneSeq, phoneSeq) != 0 {
+    if comparePhoneSeq(phraseArray.array[0].phoneSeq, phoneSeq, 0) != 0 {
         t.Errorf("phoneSeq %s is not expected value %s", phraseArray.array[0].phoneSeq, phoneSeq)
     }
 

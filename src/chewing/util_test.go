@@ -90,24 +90,31 @@ func TestComparePhone(t *testing.T) {
     var x []uint16
     var y []uint16
 
-    x = []uint16{ 1 }
-    y = []uint16{ 2 }
-    ret = comparePhoneSeq(x, y)
+    x = []uint16{ 8708 }
+    y = []uint16{ 10268 }
+    ret = comparePhoneSeq(x, y, 0)
     if ret >= 0 {
-        t.Errorf("comparePhoneSeq(%s, %s) shall < 0, but got %d", x, y, ret)
+        t.Errorf("comparePhoneSeq(%s, %s, 0) shall < 0, but got %d", x, y, ret)
     }
 
-    x = []uint16{ 2 }
-    y = []uint16{ 1, 1 }
-    ret = comparePhoneSeq(x, y)
+    x = []uint16{ 10268 }
+    y = []uint16{ 8708, 8708 }
+    ret = comparePhoneSeq(x, y, 0)
     if ret <= 0 {
-        t.Errorf("comparePhoneSeq(%s, %s) shall >= 0, but got %d", x, y, ret)
+        t.Errorf("comparePhoneSeq(%s, %s, 0) shall >= 0, but got %d", x, y, ret)
     }
 
-    x = []uint16{ 1 }
-    y = []uint16{ 1 }
-    ret = comparePhoneSeq(x, y)
+    x = []uint16{ 10262, 10262 }
+    y = []uint16{ 10262, 10262 }
+    ret = comparePhoneSeq(x, y, 0)
     if ret != 0 {
-        t.Errorf("comparePhoneSeq(%s, %s) shall = 0, but got %d", x, y, ret)
+        t.Errorf("comparePhoneSeq(%s, %s, 0) shall = 0, but got %d", x, y, ret)
+    }
+
+    x = []uint16{ 10264 }
+    y = []uint16{ 10268 }
+    ret = comparePhoneSeq(x, y, PHONE_FUZZY_TONELESS)
+    if ret != 0 {
+        t.Errorf("comparePhoneSeq(%s, %s, PHONE_FUZZY_TONELESS) shall = 0, but got %d", x, y, ret)
     }
 }

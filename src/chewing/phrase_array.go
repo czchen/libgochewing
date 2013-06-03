@@ -32,7 +32,7 @@ func (this *PhraseArray) insert(phrase *Phrase, phoneSeq []uint16) (err error) {
 
     for begin < end {
         pos := (begin + end) / 2
-        compare := comparePhoneSeq(this.array[pos].phoneSeq, phoneSeq)
+        compare := comparePhoneSeq(this.array[pos].phoneSeq, phoneSeq, 0)
 
         if compare == 0 {
             return this.array[pos].insert(phrase)

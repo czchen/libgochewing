@@ -8,6 +8,11 @@ import (
     "strings"
 )
 
+const (
+    PHONE_FUZZY_TONELESS = 0x00000001
+    PHONE_FUZZY_ALL      = 0xffffffff
+)
+
 type BopomofoTable struct {
     name string
     literal string
@@ -117,7 +122,7 @@ func calculateHammingDistance(x []uint16, y[]uint16) (distance uint8, err error)
     return distance, nil
 }
 
-func comparePhoneSeq(x []uint16, y []uint16) int {
+func comparePhoneSeq(x []uint16, y []uint16, flag uint32) int {
     var min int
     lenX := len(x)
     lenY := len(y)
@@ -129,10 +134,20 @@ func comparePhoneSeq(x []uint16, y []uint16) int {
     }
 
     for i := 0; i < min; i++ {
-        if x[i] != y[i] {
-            return int(x[i]) - int(y[i])
+        compare := comparePhone(x[i], y[i], flag)
+        if compare != 0 {
+            return compare
         }
     }
 
     return lenX - lenY
+}
+
+func comparePhone(x uint16, y uint16, flag uint32) int {
+    if flag & PHONE_FUZZY_TONELESS == PHONE_FUZZY_TONELESS {
+        x &^= 0x7
+        y &^= 0x7
+    }
+
+    return int(x) - int(y)
 }
