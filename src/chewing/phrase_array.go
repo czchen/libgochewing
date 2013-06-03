@@ -14,10 +14,10 @@ type PhraseArrayItem struct {
     phrase []*Phrase
 }
 
-func newPhraseArray() (phraseArray *PhraseArray, err error) {
+func newPhraseArray() (phraseArray *PhraseArray) {
     phraseArray = new(PhraseArray)
     phraseArray.array = make([]*PhraseArrayItem, 0, 1024)
-    return phraseArray, nil
+    return phraseArray
 }
 
 func newPhraseArrayItem(phoneSeq []uint16) (phraseArrayItem *PhraseArrayItem) {

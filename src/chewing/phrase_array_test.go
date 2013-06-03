@@ -56,12 +56,9 @@ func TestPhraseArrayInsert(t *testing.T) {
         t.Errorf("newPhrase shall not fail. It fails with %s", err.Error())
     }
 
-    phraseArray, err := newPhraseArray()
+    phraseArray := newPhraseArray()
     if phraseArray == nil {
         t.Fatal("newPhraseArray shall not fail")
-    }
-    if err != nil {
-        t.Errorf("newPhraseArray shall not fail. It fails with %s", err.Error())
     }
     phoneSeq := []uint16{ 10268, 8708 }
 
