@@ -158,3 +158,10 @@ func comparePhone(x uint16, y uint16, flag uint32) int {
 
     return int(x) - int(y)
 }
+
+func getFuzzyPhone(phone uint16) uint16 {
+    // PHONE_FUZZY_TONELESS
+    phone &^= (BOPOMOFO_TABLE[BOPOMOFO_TONE].mask << BOPOMOFO_TABLE[BOPOMOFO_TONE].shift)
+
+    return phone
+}

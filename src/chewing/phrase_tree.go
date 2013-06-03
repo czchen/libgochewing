@@ -1,83 +1,50 @@
 package chewing
 
-import (
-    "errors"
-    "fmt"
-)
-
-type PhraseTreeNode struct {
-    children map[uint16] *PhraseTreeNode
-    allPhrase []*Phrase
-}
-
-type PhraseDictionary struct {
+type PhraseTree struct {
     root *PhraseTreeNode
 }
 
-func newPhraseTreeNode() (node *PhraseTreeNode) {
-    node = new(PhraseTreeNode)
-    node.children = make(map[uint16] *PhraseTreeNode)
-
-    return node
+type PhraseTreeNode struct {
+    children map[uint16] *PhraseTreeNode
+    phraseArrayItem []*PhraseArrayItem
 }
 
-func newPhraseDictionary() (dict *PhraseDictionary) {
-    dict = new(PhraseDictionary)
-    dict.root = newPhraseTreeNode()
-
-    return dict
+func newPhraseTree() (phraseTree *PhraseTree) {
+    phraseTree = new(PhraseTree)
+    phraseTree.root = newPhraseTreeNode()
+    return phraseTree
 }
 
-func (this *PhraseTreeNode) insertPhrase(phrase *Phrase) (err error) {
-    if this.allPhrase == nil {
-        this.allPhrase = make([]*Phrase, 0, 1)
-    }
-
-    length := len(this.allPhrase)
-    if length >= cap(this.allPhrase) {
-        original := this.allPhrase
-        this.allPhrase = make([]*Phrase, length, length + 1)
-        copy(this.allPhrase, original)
-    }
-
-    pos := 0
-
-    for i := 0; i < length; i++ {
-        if isTheSamePhrase(this.allPhrase[i], phrase) {
-            return errors.New(fmt.Sprintf("Phrase %s already in phrase tree", phrase.phrase))
-        }
-
-        if phrase.frequency < this.allPhrase[i].frequency {
-            pos = i + 1
-        }
-    }
-
-    this.allPhrase = this.allPhrase[:length + 1]
-    copy(this.allPhrase[pos + 1: length + 1], this.allPhrase[pos: length])
-    this.allPhrase[pos] = phrase
-
-    return nil
+func newPhraseTreeNode() (phraseTreeNode *PhraseTreeNode) {
+    phraseTreeNode = new(PhraseTreeNode)
+    phraseTreeNode.children = make(map[uint16] *PhraseTreeNode)
+    return phraseTreeNode
 }
 
-func (this *PhraseDictionary) insertPhrase(phrase *Phrase, phoneSeq []uint16) (err error) {
+func (this *PhraseTree) insert(phraseArrayItem *PhraseArrayItem) {
     current := this.root
-    for _, phone := range phoneSeq {
+    for _, phone := range phraseArrayItem.phoneSeq {
+        phone = getFuzzyPhone(phone)
         if current.children[phone] == nil {
             current.children[phone] = newPhraseTreeNode()
         }
         current = current.children[phone]
     }
-    return current.insertPhrase(phrase)
+    current.insert(phraseArrayItem)
 }
 
-func (this *PhraseDictionary) queryPhrase(phoneSeq []uint16) (phrase []*Phrase){
-    current := this.root
-
-    for _, phone := range phoneSeq {
-        if current.children[phone] == nil {
-            return nil
-        }
-        current = current.children[phone]
+func (this *PhraseTreeNode) insert(phraseArrayItem *PhraseArrayItem) {
+    if this.phraseArrayItem == nil {
+        this.phraseArrayItem = make([]*PhraseArrayItem, 0, 1)
     }
-    return current.allPhrase
+
+    length := len(this.phraseArrayItem)
+    if length == cap(this.phraseArrayItem) {
+        original := this.phraseArrayItem
+        this.phraseArrayItem = make([]*PhraseArrayItem, length, length + 1)
+        copy(this.phraseArrayItem, original)
+    }
+
+    this.phraseArrayItem = this.phraseArrayItem[:length + 1]
+    this.phraseArrayItem[length] = phraseArrayItem
 }
