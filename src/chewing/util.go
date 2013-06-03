@@ -9,6 +9,13 @@ import (
 )
 
 const (
+    BOPOMOFO_INITIAL = 0
+    BOPOMOFO_MIDDLE  = 1
+    BOPOMOFO_FINAL   = 2
+    BOPOMOFO_TONE    = 3
+)
+
+const (
     PHONE_FUZZY_TONELESS = 0x00000001
     PHONE_FUZZY_ALL      = 0xffffffff
 )
@@ -50,10 +57,10 @@ var BOPOMOFO_TABLE = [...]BopomofoTable{
 
 var BOPOMOFO_RE = regexp.MustCompile(
     "^" +
-    "([" + BOPOMOFO_TABLE[0].literal + "]?)" +
-    "([" + BOPOMOFO_TABLE[1].literal + "]?)" +
-    "([" + BOPOMOFO_TABLE[2].literal + "]?)" +
-    "([" + BOPOMOFO_TABLE[3].literal + "]?)" +
+    "([" + BOPOMOFO_TABLE[BOPOMOFO_INITIAL].literal + "]?)" +
+    "([" + BOPOMOFO_TABLE[BOPOMOFO_MIDDLE].literal + "]?)" +
+    "([" + BOPOMOFO_TABLE[BOPOMOFO_FINAL].literal + "]?)" +
+    "([" + BOPOMOFO_TABLE[BOPOMOFO_TONE].literal + "]?)" +
     "$")
 
 func convertBopomofoToPhone(bopomofo string) (phone uint16, err error) {
@@ -145,8 +152,8 @@ func comparePhoneSeq(x []uint16, y []uint16, flag uint32) int {
 
 func comparePhone(x uint16, y uint16, flag uint32) int {
     if flag & PHONE_FUZZY_TONELESS == PHONE_FUZZY_TONELESS {
-        x &^= 0x7
-        y &^= 0x7
+        x &^= (BOPOMOFO_TABLE[BOPOMOFO_TONE].mask << BOPOMOFO_TABLE[BOPOMOFO_TONE].shift)
+        y &^= (BOPOMOFO_TABLE[BOPOMOFO_TONE].mask << BOPOMOFO_TABLE[BOPOMOFO_TONE].shift)
     }
 
     return int(x) - int(y)
