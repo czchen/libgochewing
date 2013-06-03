@@ -84,3 +84,30 @@ func TestCalculateHammingDistance(t *testing.T) {
         t.Error("calculateHammingDistance shall return error")
     }
 }
+
+func TestComparePhone(t *testing.T) {
+    var ret int
+    var x []uint16
+    var y []uint16
+
+    x = []uint16{ 1 }
+    y = []uint16{ 2 }
+    ret = comparePhoneSeq(x, y)
+    if ret >= 0 {
+        t.Errorf("comparePhoneSeq(%s, %s) shall < 0, but got %d", x, y, ret)
+    }
+
+    x = []uint16{ 2 }
+    y = []uint16{ 1, 1 }
+    ret = comparePhoneSeq(x, y)
+    if ret <= 0 {
+        t.Errorf("comparePhoneSeq(%s, %s) shall >= 0, but got %d", x, y, ret)
+    }
+
+    x = []uint16{ 1 }
+    y = []uint16{ 1 }
+    ret = comparePhoneSeq(x, y)
+    if ret != 0 {
+        t.Errorf("comparePhoneSeq(%s, %s) shall = 0, but got %d", x, y, ret)
+    }
+}

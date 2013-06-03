@@ -116,3 +116,23 @@ func calculateHammingDistance(x []uint16, y[]uint16) (distance uint8, err error)
 
     return distance, nil
 }
+
+func comparePhoneSeq(x []uint16, y []uint16) int {
+    var min int
+    lenX := len(x)
+    lenY := len(y)
+
+    if lenX > lenY {
+        min = lenY
+    } else {
+        min = lenX
+    }
+
+    for i := 0; i < min; i++ {
+        if x[i] != y[i] {
+            return int(x[i]) - int(y[i])
+        }
+    }
+
+    return lenX - lenY
+}
