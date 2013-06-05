@@ -43,46 +43,30 @@ func (this *PhraseArray) insert(phrase *Phrase, phoneSeq []uint16) (err error) {
         }
     }
 
+    this.array = append(this.array, nil)
+    copy(this.array[begin + 1:], this.array[begin:])
+
     newPhraseArrayItem := newPhraseArrayItem(phoneSeq)
     newPhraseArrayItem.insert(phrase)
-
-    length := len(this.array)
-    if length == cap(this.array) {
-        original := this.array
-        this.array = make([]*PhraseArrayItem, length + 1, length * 2)
-        copy(this.array[:begin], original[:begin])
-        copy(this.array[begin + 1:length + 1], this.array[begin:length])
-        this.array[begin] = newPhraseArrayItem
-    } else {
-        this.array = this.array[:length + 1]
-        copy(this.array[begin + 1:length + 1], this.array[begin:length])
-        this.array[begin] = newPhraseArrayItem
-    }
+    this.array[begin] = newPhraseArrayItem
 
     return nil
 }
 
 func (this *PhraseArrayItem) insert(phrase *Phrase) (err error) {
-    length := len(this.phrase)
-    if length == cap(this.phrase) {
-        original := this.phrase
-        this.phrase = make([]*Phrase, length, length + 1)
-        copy(this.phrase, original)
-    }
-
     pos := 0
-    for i := 0; i < length; i++ {
-        if isTheSamePhrase(this.phrase[i], phrase) {
+    for i, item := range this.phrase {
+        if isTheSamePhrase(item, phrase) {
             return errors.New(fmt.Sprintf("Phrase %s already in phrase tree", phrase.phrase))
         }
 
-        if phrase.frequency < this.phrase[i].frequency {
+        if phrase.frequency < item.frequency {
             pos = i + 1
         }
     }
 
-    this.phrase = this.phrase[:length + 1]
-    copy(this.phrase[pos + 1: length + 1], this.phrase[pos: length])
+    this.phrase = append(this.phrase, nil)
+    copy(this.phrase[pos + 1:], this.phrase[pos:])
     this.phrase[pos] = phrase
 
     return nil
