@@ -59,7 +59,7 @@ func (this *PhraseBKForest) query(phoneSeq []uint16, threshold int) (phraseArray
         return make([]*PhraseArrayItem, 0)
     }
 
-    phraseArrayItem = make([]*PhraseArrayItem, 0, 2)
+    phraseArrayItem = make([]*PhraseArrayItem, 0, 1)
     result := make(chan *PhraseArrayItem)
     count := make(chan int)
 
@@ -69,13 +69,7 @@ func (this *PhraseBKForest) query(phoneSeq []uint16, threshold int) (phraseArray
     for counter > 0 {
         select {
         case res := <- result:
-            if len(phraseArrayItem) == cap(phraseArrayItem) {
-                origin := phraseArrayItem
-                phraseArrayItem = make([]*PhraseArrayItem, 0, len(origin))
-                copy(phraseArrayItem, origin)
-            }
-            phraseArrayItem = phraseArrayItem[:len(phraseArrayItem) + 1]
-            phraseArrayItem[len(phraseArrayItem) - 1] = res
+            phraseArrayItem = append(phraseArrayItem, res)
         case c := <- count:
             counter += c
         }
