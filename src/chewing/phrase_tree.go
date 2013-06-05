@@ -38,15 +38,7 @@ func (this *PhraseTreeNode) insert(phraseArrayItem *PhraseArrayItem) {
         this.phraseArrayItem = make([]*PhraseArrayItem, 0, 1)
     }
 
-    length := len(this.phraseArrayItem)
-    if length == cap(this.phraseArrayItem) {
-        original := this.phraseArrayItem
-        this.phraseArrayItem = make([]*PhraseArrayItem, length, length + 1)
-        copy(this.phraseArrayItem, original)
-    }
-
-    this.phraseArrayItem = this.phraseArrayItem[:length + 1]
-    this.phraseArrayItem[length] = phraseArrayItem
+    this.phraseArrayItem = append(this.phraseArrayItem, phraseArrayItem)
 }
 
 func (this *PhraseTree) query(phoneSeq []uint16, flag uint32) []*PhraseArrayItem {
