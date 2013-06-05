@@ -47,7 +47,7 @@ func TestConvertPhoneToBopomofo(t *testing.T) {
 }
 
 func TestCalculateHammingDistance(t *testing.T) {
-    var distance uint8
+    var distance int
     var err error
 
     base := []uint16{ 10268, 8708 }

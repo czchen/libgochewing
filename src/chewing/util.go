@@ -111,7 +111,7 @@ func convertPhoneToBopomofo(phone uint16) (bopomofo string, err error) {
     return buf.String(), nil
 }
 
-func calculateHammingDistance(x []uint16, y[]uint16) (distance uint8, err error) {
+func calculateHammingDistance(x []uint16, y[]uint16) (distance int, err error) {
     if len(x) != len(y) {
         return distance, errors.New(fmt.Sprintf("Cannot calculate hamming distance between %s and %s. Different length.", x, y))
     }
