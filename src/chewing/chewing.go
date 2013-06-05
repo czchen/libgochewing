@@ -14,11 +14,16 @@ type Chewing struct {
     logger ChewingLogger
 }
 
+type ChewingLogger interface {
+    Printf(format string, v ...interface{})
+}
 
 type ChewingParameters struct {
     phraseFile string
     logger ChewingLogger
 }
+
+type ChewingDefaultLogger struct {}
 
 func New(params *ChewingParameters) (chewing *Chewing, err error) {
     chewing = new(Chewing)
@@ -33,6 +38,8 @@ func New(params *ChewingParameters) (chewing *Chewing, err error) {
 
     return chewing, nil
 }
+
+func (this *ChewingDefaultLogger) Printf(format string, v ...interface{}) {}
 
 func (this *Chewing) setupLogger(params *ChewingParameters) {
     if params.logger == nil {
