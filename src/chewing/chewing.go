@@ -29,7 +29,7 @@ func New(params *ChewingParameters) (chewing *Chewing, err error) {
         return nil, err
     }
 
-    chewing.setupDictionary(params)
+    chewing.setupPhraseTree(params)
 
     return chewing, nil
 }
@@ -95,7 +95,7 @@ func (this *Chewing) setupPhraseArray(params *ChewingParameters) (err error) {
     return nil
 }
 
-func (this *Chewing) setupDictionary(params *ChewingParameters) {
+func (this *Chewing) setupPhraseTree(params *ChewingParameters) {
     this.phraseTree = newPhraseTree()
     for _, item := range this.phraseArray.array {
         this.phraseTree.insert(item)

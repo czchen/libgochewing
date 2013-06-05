@@ -48,3 +48,27 @@ func (this *PhraseTreeNode) insert(phraseArrayItem *PhraseArrayItem) {
     this.phraseArrayItem = this.phraseArrayItem[:length + 1]
     this.phraseArrayItem[length] = phraseArrayItem
 }
+
+func (this *PhraseTree) query(phoneSeq []uint16, flag uint32) []*PhraseArrayItem {
+    current := this.root
+    for _, phone := range phoneSeq {
+        phone = getFuzzyPhone(phone)
+        if current.children[phone] == nil {
+            return make([]*PhraseArrayItem, 0)
+        }
+        current = current.children[phone]
+    }
+    return current.query(phoneSeq, flag)
+}
+
+func (this *PhraseTreeNode) query(phoneSeq []uint16, flag uint32) (phraseArrayItem []*PhraseArrayItem) {
+    phraseArrayItem = make([]*PhraseArrayItem, 0, len(this.phraseArrayItem))
+
+    for _, item := range this.phraseArrayItem {
+        if comparePhoneSeq(phoneSeq, item.phoneSeq, flag) == 0 {
+            phraseArrayItem = append(phraseArrayItem, item)
+        }
+    }
+
+    return phraseArrayItem
+}
