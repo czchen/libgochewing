@@ -19,8 +19,8 @@ type ChewingLogger interface {
 }
 
 type ChewingParameters struct {
-    phraseFile string
-    logger ChewingLogger
+    PhraseFile string
+    Logger ChewingLogger
 }
 
 type ChewingDefaultLogger struct {}
@@ -42,14 +42,14 @@ func New(params *ChewingParameters) (chewing *Chewing, err error) {
 func (this *ChewingDefaultLogger) Printf(format string, v ...interface{}) {}
 
 func (this *Chewing) setupLogger(params *ChewingParameters) {
-    if params.logger == nil {
-        params.logger = new(ChewingDefaultLogger)
+    if params.Logger == nil {
+        params.Logger = new(ChewingDefaultLogger)
     }
-    this.logger = params.logger
+    this.logger = params.Logger
 }
 
 func (this *Chewing) setupPhraseArray(params *ChewingParameters) (err error) {
-    file, err := os.Open(params.phraseFile)
+    file, err := os.Open(params.PhraseFile)
     if err != nil {
         return err
     }
@@ -72,7 +72,7 @@ func (this *Chewing) setupPhraseArray(params *ChewingParameters) (err error) {
 
         token := strings.Split(text, " ")
         if len(token) < 3 {
-            return errors.New(fmt.Sprintf("`%s' is invalid in phraseFile", text))
+            return errors.New(fmt.Sprintf("`%s' is invalid in PhraseFile", text))
         }
 
         var frequency uint32

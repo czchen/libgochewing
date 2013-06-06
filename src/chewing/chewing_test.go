@@ -24,7 +24,7 @@ func TestNew(t *testing.T) {
     tmpFile.Close()
 
     params := ChewingParameters {
-        phraseFile: tmpFileName,
+        PhraseFile: tmpFileName,
     }
 
     chewing, err := New(&params)
@@ -38,7 +38,7 @@ func TestNew(t *testing.T) {
 
 func TestNewNoPhraseFile(t *testing.T) {
     params := ChewingParameters{
-        phraseFile: "NoSuchFile",
+        PhraseFile: "NoSuchFile",
     }
 
     chewing, err := New(&params)
@@ -62,7 +62,7 @@ func TestNewBadFrequency(t *testing.T) {
     tmpFile.Close()
 
     params := ChewingParameters {
-        phraseFile: tmpFileName,
+        PhraseFile: tmpFileName,
     }
 
     chewing, err := New(&params)
@@ -86,7 +86,7 @@ func TestNewBadBopomofo(t *testing.T) {
     tmpFile.Close()
 
     params := ChewingParameters {
-        phraseFile: tmpFileName,
+        PhraseFile: tmpFileName,
     }
 
     chewing, err := New(&params)
