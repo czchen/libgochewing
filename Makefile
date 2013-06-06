@@ -1,8 +1,11 @@
 export GOPATH=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
-.PHONY: all test
+.PHONY: all build test
 
-all: test
+all: build test
+
+build:
+	go build chewing
 
 test:
 	go test chewing
