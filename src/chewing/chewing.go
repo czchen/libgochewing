@@ -11,6 +11,7 @@ import (
 type Chewing struct {
     phraseArray *PhraseArray
     phraseTree *PhraseTree
+    phraseBKForest *PhraseBKForest
     logger ChewingLogger
 }
 
@@ -35,6 +36,7 @@ func New(params *ChewingParameters) (chewing *Chewing, err error) {
     }
 
     chewing.setupPhraseTree(params)
+    chewing.setupPhraseBKForest(params)
 
     return chewing, nil
 }
@@ -106,5 +108,12 @@ func (this *Chewing) setupPhraseTree(params *ChewingParameters) {
     this.phraseTree = newPhraseTree()
     for _, item := range this.phraseArray.array {
         this.phraseTree.insert(item)
+    }
+}
+
+func (this *Chewing) setupPhraseBKForest(params *ChewingParameters) {
+    this.phraseBKForest = newPhraseBKForest()
+    for _, item := range this.phraseArray.array {
+        this.phraseBKForest.insert(item)
     }
 }

@@ -13,13 +13,13 @@ type PhraseBKTreeNode struct {
     phraseArrayItem *PhraseArrayItem
 }
 
-func NewPhraseBKForest() (phraseBKForest *PhraseBKForest) {
+func newPhraseBKForest() (phraseBKForest *PhraseBKForest) {
     phraseBKForest = new(PhraseBKForest)
     phraseBKForest.tree = make(map[int]*PhraseBKTreeNode)
     return phraseBKForest
 }
 
-func NewPhraseBKTreeNode(phraseArrayItem *PhraseArrayItem) (phraseBKTreeNode *PhraseBKTreeNode) {
+func newPhraseBKTreeNode(phraseArrayItem *PhraseArrayItem) (phraseBKTreeNode *PhraseBKTreeNode) {
     phraseBKTreeNode = new(PhraseBKTreeNode)
     phraseBKTreeNode.children = make(map[int]*PhraseBKTreeNode)
     phraseBKTreeNode.phraseArrayItem = phraseArrayItem
@@ -29,7 +29,7 @@ func NewPhraseBKTreeNode(phraseArrayItem *PhraseArrayItem) (phraseBKTreeNode *Ph
 func (this *PhraseBKForest) insert(phraseArrayItem *PhraseArrayItem) (err error) {
     length := len(phraseArrayItem.phoneSeq)
     if this.tree[length] == nil {
-        this.tree[length] = NewPhraseBKTreeNode(phraseArrayItem)
+        this.tree[length] = newPhraseBKTreeNode(phraseArrayItem)
         return nil
     } else {
         return this.tree[length].insert(phraseArrayItem)
@@ -46,7 +46,7 @@ func (this *PhraseBKTreeNode) insert(phraseArrayItem *PhraseArrayItem) (err erro
     }
 
     if this.children[distance] == nil {
-        this.children[distance] = NewPhraseBKTreeNode(phraseArrayItem)
+        this.children[distance] = newPhraseBKTreeNode(phraseArrayItem)
         return nil
     } else {
         return this.children[distance].insert(phraseArrayItem)

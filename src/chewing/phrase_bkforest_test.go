@@ -9,7 +9,7 @@ func TestBKForestInsertAndQuery(t *testing.T) {
     item2 := PhraseArrayItem{ phoneSeq: []uint16{ 10264, 8708 } }
     var ret []*PhraseArrayItem
 
-    forest := NewPhraseBKForest()
+    forest := newPhraseBKForest()
 
     forest.insert(&item1)
     forest.insert(&item2)

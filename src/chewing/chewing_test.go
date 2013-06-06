@@ -3,6 +3,7 @@ package chewing
 import (
     "io/ioutil"
     "os"
+    "path"
     "testing"
 )
 
@@ -95,5 +96,30 @@ func TestNewBadBopomofo(t *testing.T) {
     }
     if err == nil {
         t.Error("Shall return error")
+    }
+}
+
+func BenchmarkNew(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        _, err := New(&ChewingParameters{
+            PhraseFile: path.Join(os.Getenv("GOPATH"), "data", "tsi.src"),
+        })
+        if err != nil {
+            panic("New shall not return error")
+        }
+    }
+}
+
+func BenchmarkBKForestQuery(b *testing.B) {
+    ctx, err := New(&ChewingParameters{
+        PhraseFile: path.Join(os.Getenv("GOPATH"), "data", "tsi.src"),
+    })
+    if err != nil {
+        panic("New shall not return error")
+    }
+
+    b.ResetTimer()
+    for i := 0; i < b.N; i++ {
+        ctx.phraseBKForest.query([]uint16{ 10268, 8708 }, 2)
     }
 }
