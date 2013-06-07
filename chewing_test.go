@@ -4,6 +4,7 @@ import (
     "io/ioutil"
     "os"
     "path"
+    "runtime"
     "testing"
 )
 
@@ -100,9 +101,12 @@ func TestNewBadBopomofo(t *testing.T) {
 }
 
 func BenchmarkNew(b *testing.B) {
+    _, phraseFile, _, _ := runtime.Caller(0)
+    phraseFile = path.Join(path.Dir(phraseFile), "data", "tsi.src")
+
     for i := 0; i < b.N; i++ {
         _, err := New(&ChewingParameters{
-            PhraseFile: path.Join(os.Getenv("GOPATH"), "data", "tsi.src"),
+            PhraseFile: phraseFile,
         })
         if err != nil {
             panic("New shall not return error")
@@ -111,8 +115,11 @@ func BenchmarkNew(b *testing.B) {
 }
 
 func BenchmarkBKForestQuery(b *testing.B) {
+    _, phraseFile, _, _ := runtime.Caller(0)
+    phraseFile = path.Join(path.Dir(phraseFile), "data", "tsi.src")
+
     ctx, err := New(&ChewingParameters{
-        PhraseFile: path.Join(os.Getenv("GOPATH"), "data", "tsi.src"),
+        PhraseFile: phraseFile,
     })
     if err != nil {
         panic("New shall not return error")
