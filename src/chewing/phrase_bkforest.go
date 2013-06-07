@@ -60,13 +60,13 @@ func (this *PhraseBKForest) query(phoneSeq []uint16, threshold int) (phraseArray
     }
 
     phraseArrayItem = make([]*PhraseArrayItem, 0, 1)
-    result := make(chan *PhraseArrayItem)
-    count := make(chan int)
+    result := make(chan *PhraseArrayItem, 1000)
+    count := make(chan int, 1000)
 
     counter := 1
     go this.tree[length].query(phoneSeq, threshold, count, result)
 
-    for counter > 0 {
+    for counter > 0 || len(result) > 0 {
         select {
         case res := <- result:
             phraseArrayItem = append(phraseArrayItem, res)
