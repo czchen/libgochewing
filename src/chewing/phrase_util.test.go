@@ -1,4 +1,4 @@
-package chewing
+package libgochewing
 
 import (
     "testing"

@@ -1,4 +1,4 @@
-package chewing
+package libgochewing
 
 type PhraseTree struct {
     root *PhraseTreeNode
