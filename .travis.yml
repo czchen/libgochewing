@@ -7,3 +7,12 @@ before_install:
     - sudo add-apt-repository --yes ppa:czchen/travis-ci
     - sudo apt-get update -qq
     - sudo apt-get install -qq golang-stable # Install go1.1
+
+install:
+    echo "install"
+
+before_script:
+    echo "before_script"
+
+script:
+    /usr/bin/go test ./...
