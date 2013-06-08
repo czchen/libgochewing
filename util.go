@@ -9,14 +9,14 @@ import (
 )
 
 const (
-    BOPOMOFO_INITIAL = 0
-    BOPOMOFO_MIDDLE  = 1
-    BOPOMOFO_FINAL   = 2
-    BOPOMOFO_TONE    = 3
+    BOPOMOFO_INITIAL = iota
+    BOPOMOFO_MIDDLE
+    BOPOMOFO_FINAL
+    BOPOMOFO_TONE
 )
 
 const (
-    PHONE_FUZZY_TONELESS = 0x00000001
+    PHONE_FUZZY_TONELESS = 1 << iota
     PHONE_FUZZY_ALL      = 0xffffffff
 )
 
