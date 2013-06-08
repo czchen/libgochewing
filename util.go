@@ -29,25 +29,25 @@ type BopomofoTable struct {
 }
 
 var BOPOMOFO_TABLE = [...]BopomofoTable{
-    {
+    BOPOMOFO_INITIAL: {
         literal: "ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙ",
         shift: 9,
         mask: 0x1f,
         length: 3,
     },
-    {
+    BOPOMOFO_MIDDLE: {
         literal: "ㄧㄨㄩ",
         shift: 7,
         mask: 0x3,
         length: 3,
     },
-    {
+    BOPOMOFO_FINAL: {
         literal: "ㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ",
         shift: 3,
         mask: 0x1f,
         length: 3,
     },
-    {
+    BOPOMOFO_TONE: {
         literal: "˙ˊˇˋ",
         shift: 0,
         mask: 0x7,
