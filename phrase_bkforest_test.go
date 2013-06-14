@@ -14,12 +14,12 @@ func TestBKForestInsertAndQuery(t *testing.T) {
     forest.insert(&item1)
     forest.insert(&item2)
 
-    ret = forest.query([]uint16{ 10268, 8708 }, 0)
+    ret = forest.query(newFakePhoneSeq([]uint16{ 10268, 8708 }), 0)
     if len(ret) != 1 {
         t.Errorf("query shall return 1 PhraseArrayItem. Got %d", len(ret))
     }
 
-    ret = forest.query([]uint16{ 10268, 8708 }, 1)
+    ret = forest.query(newFakePhoneSeq([]uint16{ 10268, 8708 }), 1)
     if len(ret) != 2 {
         t.Errorf("query shall return 2 PhraseArrayItem. Got %d", len(ret))
     }

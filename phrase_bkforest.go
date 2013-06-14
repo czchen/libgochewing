@@ -37,7 +37,7 @@ func (this *PhraseBKForest) insert(phraseArrayItem *PhraseArrayItem) (err error)
 }
 
 func (this *PhraseBKTreeNode) insert(phraseArrayItem *PhraseArrayItem) (err error) {
-    distance, err := calculateHammingDistance(this.phraseArrayItem.phoneSeq, phraseArrayItem.phoneSeq)
+    distance, err := calculateHammingDistance(this.phraseArrayItem, phraseArrayItem)
     if err != nil {
         return err
     }
@@ -53,8 +53,8 @@ func (this *PhraseBKTreeNode) insert(phraseArrayItem *PhraseArrayItem) (err erro
     }
 }
 
-func (this *PhraseBKForest) query(phoneSeq []uint16, threshold int) (phraseArrayItem []*PhraseArrayItem) {
-    length := len(phoneSeq)
+func (this *PhraseBKForest) query(phoneSeq PhoneSeq, threshold int) (phraseArrayItem []*PhraseArrayItem) {
+    length := phoneSeq.getLength()
     if this.tree[length] == nil {
         return make([]*PhraseArrayItem, 0)
     }
@@ -78,8 +78,8 @@ func (this *PhraseBKForest) query(phoneSeq []uint16, threshold int) (phraseArray
     return phraseArrayItem
 }
 
-func (this *PhraseBKTreeNode) query(phoneSeq []uint16, threshold int, count chan<- int, result chan<- *PhraseArrayItem) {
-    diff, err := calculateHammingDistance(phoneSeq, this.phraseArrayItem.phoneSeq)
+func (this *PhraseBKTreeNode) query(phoneSeq PhoneSeq, threshold int, count chan<- int, result chan<- *PhraseArrayItem) {
+    diff, err := calculateHammingDistance(phoneSeq, this.phraseArrayItem)
     if err != nil {
         panic("calculateHammingDistance fails in PhraseBKTreeNode.query")
     }

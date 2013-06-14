@@ -71,3 +71,11 @@ func (this *PhraseArrayItem) insert(phrase *Phrase) (err error) {
 
     return nil
 }
+
+func (this *PhraseArrayItem) getLength() int {
+    return len(this.phoneSeq)
+}
+
+func (this *PhraseArrayItem) getPhoneAtPos(pos int) uint16 {
+    return this.phoneSeq[pos]
+}

@@ -125,8 +125,10 @@ func BenchmarkBKForestQuery(b *testing.B) {
         panic("New shall not return error")
     }
 
+    pivot := newFakePhoneSeq([]uint16{ 10268, 8708 })
+
     b.ResetTimer()
     for i := 0; i < b.N; i++ {
-        ctx.phraseBKForest.query([]uint16{ 10268, 8708 }, 2)
+        ctx.phraseBKForest.query(pivot, 2)
     }
 }

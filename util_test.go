@@ -50,10 +50,10 @@ func TestCalculateHammingDistance(t *testing.T) {
     var distance int
     var err error
 
-    base := []uint16{ 10268, 8708 }
-    dist1 := []uint16{ 10264, 8708 }
-    dist2 := []uint16{ 8220, 10756 }
-    distErr := []uint16{ 10268, 8708, 10268, 8708 }
+    base := newFakePhoneSeq([]uint16{ 10268, 8708 })
+    dist1 := newFakePhoneSeq([]uint16{ 10264, 8708 })
+    dist2 := newFakePhoneSeq([]uint16{ 8220, 10756 })
+    distErr := newFakePhoneSeq([]uint16{ 10268, 8708, 10268, 8708 })
 
     distance, err = calculateHammingDistance(base, base)
     if distance != 0 {
