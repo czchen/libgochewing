@@ -9,18 +9,27 @@ See [How to Write Go Code](http://golang.org/doc/code.html), or using command `g
 
 If your environment does not have golang, or the version of golang is too old, you can install it by [gvm](https://github.com/moovweb/gvm).
 
+## Install Dependencies
+The following command can install dependencies of this project:
+
+    go get
+
+The following command installs dependencies for unit test:
+
+    go list -f '{{range .TestImports}}{{.}} {{end}}' github.com/czchen/libgochewing | xargs go get
+
 ## Unit Test
-The following cmomand run unit test of this project.
+The following cmomand runs unit test of this project:
 
     go test
 
 ## Benchmark
-The following command run benchmark of this project.
+The following command runs benchmark of this project:
 
     go test -bench .
 
 ## Coverage
-The following commands create summary coverage report for unit test.
+The following commands create summary coverage report for unit test:
 
     go get github.com/axw/gocov/gocov
     bin/gocov test github.com/czchen/libgochewing | bin/gocov report
