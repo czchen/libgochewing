@@ -9,9 +9,9 @@ func TestHook(t *testing.T) {
 	gocheck.TestingT(t)
 }
 
-type MySuite struct{}
+type EmptySuite struct{}
 
-var _ = gocheck.Suite(&MySuite{})
+var _ = gocheck.Suite(&EmptySuite{})
 
 type TestData struct {
 	bopomofo string
@@ -55,7 +55,7 @@ func TestConvertPhoneToBopomofo(t *testing.T) {
 	}
 }
 
-func (this *MySuite) TestCalculateHammingDistance(c *gocheck.C) {
+func (this *EmptySuite) TestCalculateHammingDistance(c *gocheck.C) {
 	base := newFakePhoneSeq([]uint16{10268, 8708})
 	dist1 := newFakePhoneSeq([]uint16{10264, 8708})
 	dist2 := newFakePhoneSeq([]uint16{8220, 10756})

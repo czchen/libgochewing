@@ -9,6 +9,6 @@ func TestHook(t *testing.T) {
 	gocheck.TestingT(t)
 }
 
-type MySuite struct{}
+type EmptySuite struct{}
 
-var _ = gocheck.Suite(&MySuite{})
+var _ = gocheck.Suite(&EmptySuite{})
