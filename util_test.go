@@ -47,7 +47,7 @@ func TestConvertPhoneToBopomofo(t *testing.T) {
 	}
 }
 
-func (this *EmptySuite) TestCalculateHammingDistance(c *gocheck.C) {
+func (this *DefaultSuite) TestCalculateHammingDistance(c *gocheck.C) {
 	base := newFakePhoneSeq([]uint16{10268, 8708})
 	dist1 := newFakePhoneSeq([]uint16{10264, 8708})
 	dist2 := newFakePhoneSeq([]uint16{8220, 10756})
