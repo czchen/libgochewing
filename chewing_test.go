@@ -2,102 +2,92 @@ package libgochewing
 
 import (
 	"io/ioutil"
+	"launchpad.net/gocheck"
 	"os"
 	"path"
 	"runtime"
 	"testing"
 )
 
-func TestNew(t *testing.T) {
-	tmpFile, err := ioutil.TempFile("", "")
-	if err != nil {
-		t.Fatalf("Cannot create temp file: %s", err.Error())
-	}
-	tmpFileName := tmpFile.Name()
-	defer os.Remove(tmpFileName)
+type ChewingSuite struct{
+	phraseFile string
+}
 
-	tmpFile.WriteString(
+var _ = gocheck.Suite(&ChewingSuite{})
+
+func (this *ChewingSuite) SetUpSuite(c *gocheck.C) {
+	phraseFile, err := ioutil.TempFile("", "")
+	c.Assert(phraseFile, gocheck.FitsTypeOf, &os.File{})
+	c.Assert(err, gocheck.IsNil)
+
+	this.phraseFile = phraseFile.Name()
+
+	phraseFile.WriteString(
 		"# This is comment\n" +
 			"\x09\x0b\x20測試 5 ㄘㄜˋ ㄕˋ\n" +
 			"側室 4 ㄘㄜˋ ㄕˋ\x09\x0b\x20\n" +
 			"側視 3 ㄘㄜˋ ㄕ # This is commentˋ\n" +
 			"策士 2 ㄘㄜˋ ㄕˋ\n" +
 			"策試 1 ㄘㄜˋ ㄕˋ\n")
-	tmpFile.Close()
-
-	params := ChewingParameters{
-		PhraseFile: tmpFileName,
-	}
-
-	chewing, err := New(&params)
-	if chewing == nil {
-		t.Error("Shall not return nil")
-	}
-	if err != nil {
-		t.Errorf("Shall not return error %s", err.Error())
-	}
+	phraseFile.Close()
 }
 
-func TestNewNoPhraseFile(t *testing.T) {
-	params := ChewingParameters{
+func (this *ChewingSuite) TearDownSuite(c *gocheck.C) {
+	os.Remove(this.phraseFile)
+}
+
+func (this *ChewingSuite) TestNew(c *gocheck.C) {
+	chewing, err := New(&ChewingParameters{
+		PhraseFile: this.phraseFile,
+	})
+
+	c.Check(chewing, gocheck.FitsTypeOf, &Chewing{})
+	c.Check(err, gocheck.IsNil)
+}
+
+func (this *ChewingSuite) TestNewNoPhraseFile(c *gocheck.C) {
+	chewing, err := New(&ChewingParameters{
 		PhraseFile: "NoSuchFile",
-	}
+	})
 
-	chewing, err := New(&params)
-	if chewing != nil {
-		t.Error("Shall return nil")
-	}
-	if err == nil {
-		t.Error("Shall return error")
-	}
+	c.Check(chewing, gocheck.IsNil)
+	c.Check(err, gocheck.NotNil)
 }
 
-func TestNewBadFrequency(t *testing.T) {
+func (this *ChewingSuite) TestNewBadFrequency(c *gocheck.C) {
 	tmpFile, err := ioutil.TempFile("", "")
-	if err != nil {
-		t.Fatalf("Cannot create temp file: %s", err.Error())
-	}
+	c.Assert(tmpFile, gocheck.FitsTypeOf, &os.File{})
+	c.Assert(err, gocheck.IsNil)
+
 	tmpFileName := tmpFile.Name()
 	defer os.Remove(tmpFileName)
 
 	tmpFile.WriteString("測試 a ㄘㄜˋ ㄕˋ\n")
 	tmpFile.Close()
 
-	params := ChewingParameters{
+	chewing, err := New(&ChewingParameters{
 		PhraseFile: tmpFileName,
-	}
-
-	chewing, err := New(&params)
-	if chewing != nil {
-		t.Error("Shall return nil")
-	}
-	if err == nil {
-		t.Error("Shall return error")
-	}
+	})
+	c.Check(chewing, gocheck.IsNil)
+	c.Check(err, gocheck.NotNil)
 }
 
-func TestNewBadBopomofo(t *testing.T) {
+func (this *ChewingSuite) TestNewBadBopomofo(c *gocheck.C) {
 	tmpFile, err := ioutil.TempFile("", "")
-	if err != nil {
-		t.Fatalf("Cannot create temp file: %s", err.Error())
-	}
+	c.Assert(tmpFile, gocheck.FitsTypeOf, &os.File{})
+	c.Assert(err, gocheck.IsNil)
+
 	tmpFileName := tmpFile.Name()
 	defer os.Remove(tmpFileName)
 
 	tmpFile.WriteString("測試 a ㄘㄜ1 ㄕˋ\n")
 	tmpFile.Close()
 
-	params := ChewingParameters{
+	chewing, err := New(&ChewingParameters{
 		PhraseFile: tmpFileName,
-	}
-
-	chewing, err := New(&params)
-	if chewing != nil {
-		t.Error("Shall return nil")
-	}
-	if err == nil {
-		t.Error("Shall return error")
-	}
+	})
+	c.Check(chewing, gocheck.IsNil)
+	c.Check(err, gocheck.NotNil)
 }
 
 func BenchmarkNew(b *testing.B) {
