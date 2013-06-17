@@ -11,6 +11,7 @@ import (
 
 type ChewingSuite struct{
 	phraseFile string
+	err error
 }
 
 var _ = gocheck.Suite(&ChewingSuite{})
@@ -51,7 +52,7 @@ func (this *ChewingSuite) TestNewNoPhraseFile(c *gocheck.C) {
 	})
 
 	c.Check(chewing, gocheck.IsNil)
-	c.Check(err, gocheck.NotNil)
+	c.Check(err, gocheck.Implements, &this.err)
 }
 
 func (this *ChewingSuite) TestNewBadFrequency(c *gocheck.C) {
@@ -69,7 +70,7 @@ func (this *ChewingSuite) TestNewBadFrequency(c *gocheck.C) {
 		PhraseFile: tmpFileName,
 	})
 	c.Check(chewing, gocheck.IsNil)
-	c.Check(err, gocheck.NotNil)
+	c.Check(err, gocheck.Implements, &this.err)
 }
 
 func (this *ChewingSuite) TestNewBadBopomofo(c *gocheck.C) {
@@ -87,7 +88,7 @@ func (this *ChewingSuite) TestNewBadBopomofo(c *gocheck.C) {
 		PhraseFile: tmpFileName,
 	})
 	c.Check(chewing, gocheck.IsNil)
-	c.Check(err, gocheck.NotNil)
+	c.Check(err, gocheck.Implements, &this.err)
 }
 
 func (this *ChewingSuite) TestSetKeyboardType(c *gocheck.C) {
@@ -99,8 +100,8 @@ func (this *ChewingSuite) TestSetKeyboardType(c *gocheck.C) {
 	c.Assert(err, gocheck.IsNil)
 
 	c.Check(chewing.SetKeyboardType(KEYBOARD_DEFAULT), gocheck.IsNil)
-	c.Check(chewing.SetKeyboardType(KEYBOARD_MIN - 1), gocheck.NotNil)
-	c.Check(chewing.SetKeyboardType(KEYBOARD_MAX + 1), gocheck.NotNil)
+	c.Check(chewing.SetKeyboardType(KEYBOARD_MIN - 1), gocheck.Implements, &this.err)
+	c.Check(chewing.SetKeyboardType(KEYBOARD_MAX + 1), gocheck.Implements, &this.err)
 }
 
 func BenchmarkNew(b *testing.B) {
