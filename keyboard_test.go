@@ -2,16 +2,7 @@ package libgochewing
 
 import (
 	"launchpad.net/gocheck"
-	"testing"
 )
-
-func TestHook(t *testing.T) {
-	gocheck.TestingT(t)
-}
-
-type MySuite struct{}
-
-var _ = gocheck.Suite(&MySuite{})
 
 func (this *MySuite) TestGetPhoneFromKey(c *gocheck.C) {
 	c.Check(getPhoneFromKey('1', KEYBOARD_DEFAULT), gocheck.Equals, uint16(512))

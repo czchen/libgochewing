@@ -37,10 +37,7 @@ func (this *PhraseBKForest) insert(phraseArrayItem *PhraseArrayItem) (err error)
 }
 
 func (this *PhraseBKTreeNode) insert(phraseArrayItem *PhraseArrayItem) (err error) {
-	distance, err := calculateHammingDistance(this.phraseArrayItem, phraseArrayItem)
-	if err != nil {
-		return err
-	}
+	distance := calculateHammingDistance(this.phraseArrayItem, phraseArrayItem)
 	if distance == 0 {
 		return errors.New("Duplicate phoneSeq insert")
 	}
@@ -79,10 +76,7 @@ func (this *PhraseBKForest) query(phoneSeq PhoneSeq, threshold int) (phraseArray
 }
 
 func (this *PhraseBKTreeNode) query(phoneSeq PhoneSeq, threshold int, count chan<- int, result chan<- *PhraseArrayItem) {
-	diff, err := calculateHammingDistance(phoneSeq, this.phraseArrayItem)
-	if err != nil {
-		panic("calculateHammingDistance fails in PhraseBKTreeNode.query")
-	}
+	diff := calculateHammingDistance(phoneSeq, this.phraseArrayItem)
 	if diff <= threshold {
 		result <- this.phraseArrayItem
 	}
