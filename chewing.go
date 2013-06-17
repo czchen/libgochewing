@@ -13,6 +13,7 @@ type Chewing struct {
 	phraseTree     *PhraseTree
 	phraseBKForest *PhraseBKForest
 	logger         ChewingLogger
+	keyboardType   int
 }
 
 type ChewingLogger interface {
@@ -116,4 +117,11 @@ func (this *Chewing) setupPhraseBKForest(params *ChewingParameters) {
 	for _, item := range this.phraseArray.array {
 		this.phraseBKForest.insert(item)
 	}
+}
+
+func (this *Chewing) SetKeyboardType(keyboard int) error {
+	if keyboard < KEYBOARD_MIN || keyboard > KEYBOARD_MAX {
+		errors.New(fmt.Sprintf("illegal keyboard type %d", keyboard))
+	}
+	return nil
 }

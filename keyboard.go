@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	KEYBOARD_DEFAULT = iota
+	KEYBOARD_MIN, KEYBOARD_DEFAULT, KEYBOARD_MAX = iota, iota, iota
 )
 
 type KeyboardTable struct {
