@@ -9,9 +9,9 @@ import (
 	"testing"
 )
 
-type ChewingSuite struct{
+type ChewingSuite struct {
 	phraseFile string
-	err error
+	err        error
 }
 
 var _ = gocheck.Suite(&ChewingSuite{})
@@ -100,8 +100,8 @@ func (this *ChewingSuite) TestSetKeyboardType(c *gocheck.C) {
 	c.Assert(err, gocheck.IsNil)
 
 	c.Check(chewing.SetKeyboardType(KEYBOARD_DEFAULT), gocheck.IsNil)
-	c.Check(chewing.SetKeyboardType(KEYBOARD_MIN - 1), gocheck.Implements, &this.err)
-	c.Check(chewing.SetKeyboardType(KEYBOARD_MAX + 1), gocheck.Implements, &this.err)
+	c.Check(chewing.SetKeyboardType(KEYBOARD_MIN-1), gocheck.Implements, &this.err)
+	c.Check(chewing.SetKeyboardType(KEYBOARD_MAX+1), gocheck.Implements, &this.err)
 }
 
 func BenchmarkNew(b *testing.B) {
