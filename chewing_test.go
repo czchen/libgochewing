@@ -90,6 +90,19 @@ func (this *ChewingSuite) TestNewBadBopomofo(c *gocheck.C) {
 	c.Check(err, gocheck.NotNil)
 }
 
+func (this *ChewingSuite) TestSetKeyboardType(c *gocheck.C) {
+	chewing, err := New(&ChewingParameters{
+		PhraseFile: this.phraseFile,
+	})
+
+	c.Assert(chewing, gocheck.FitsTypeOf, &Chewing{})
+	c.Assert(err, gocheck.IsNil)
+
+	c.Check(chewing.SetKeyboardType(KEYBOARD_DEFAULT), gocheck.IsNil)
+	c.Check(chewing.SetKeyboardType(KEYBOARD_MIN - 1), gocheck.NotNil)
+	c.Check(chewing.SetKeyboardType(KEYBOARD_MAX + 1), gocheck.NotNil)
+}
+
 func BenchmarkNew(b *testing.B) {
 	_, phraseFile, _, _ := runtime.Caller(0)
 	phraseFile = path.Join(path.Dir(phraseFile), "data", "tsi.src")

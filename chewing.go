@@ -121,7 +121,7 @@ func (this *Chewing) setupPhraseBKForest(params *ChewingParameters) {
 
 func (this *Chewing) SetKeyboardType(keyboard int) error {
 	if keyboard < KEYBOARD_MIN || keyboard > KEYBOARD_MAX {
-		errors.New(fmt.Sprintf("illegal keyboard type %d", keyboard))
+		return errors.New(fmt.Sprintf("illegal keyboard type %d", keyboard))
 	}
 	return nil
 }
