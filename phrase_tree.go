@@ -24,7 +24,7 @@ func newPhraseTreeNode() (phraseTreeNode *PhraseTreeNode) {
 func (this *PhraseTree) insert(phraseArrayItem *PhraseArrayItem) {
 	current := this.root
 	for _, phone := range phraseArrayItem.phoneSeq {
-		phone = getFuzzyPhone(phone)
+		phone = getFuzzyPhone(phone, PHONE_FUZZY_ALL)
 		if current.children[phone] == nil {
 			current.children[phone] = newPhraseTreeNode()
 		}
@@ -44,7 +44,7 @@ func (this *PhraseTreeNode) insert(phraseArrayItem *PhraseArrayItem) {
 func (this *PhraseTree) query(phoneSeq []uint16, flag uint32) []*PhraseArrayItem {
 	current := this.root
 	for _, phone := range phoneSeq {
-		phone = getFuzzyPhone(phone)
+		phone = getFuzzyPhone(phone, PHONE_FUZZY_ALL)
 		if current.children[phone] == nil {
 			return make([]*PhraseArrayItem, 0)
 		}

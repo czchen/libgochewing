@@ -215,21 +215,20 @@ func comparePhoneSeq(x []uint16, y []uint16, flag uint32) int {
 	return lenX - lenY
 }
 
-func comparePhone(x uint16, y uint16, flag uint32) int {
-	if flag&PHONE_FUZZY_TONELESS == PHONE_FUZZY_TONELESS {
-		x &^= BOPOMOFO_TABLE[BOPOMOFO_TONE].mask
-		y &^= BOPOMOFO_TABLE[BOPOMOFO_TONE].mask
-	}
-
-	if flag&PHONE_FUZZY_EN_ENG == PHONE_FUZZY_EN_ENG {
-	}
-
-	return int(x) - int(y)
+func comparePhone(x uint16, y uint16, fuzzy uint32) int {
+	return int(getFuzzyPhone(x, fuzzy)) - int(getFuzzyPhone(y, fuzzy))
 }
 
-func getFuzzyPhone(phone uint16) uint16 {
-	// PHONE_FUZZY_TONELESS
-	phone &^= BOPOMOFO_TABLE[BOPOMOFO_TONE].mask
+func getFuzzyPhone(phone uint16, fuzzy uint32) uint16 {
+	if fuzzy&PHONE_FUZZY_TONELESS == PHONE_FUZZY_TONELESS {
+		phone &^= BOPOMOFO_TABLE[BOPOMOFO_TONE].mask
+	}
+
+	if fuzzy&PHONE_FUZZY_EN_ENG == PHONE_FUZZY_EN_ENG &&
+		phone&BOPOMOFO_TABLE[BOPOMOFO_FINAL].mask == BOPOMOFO_TABLE[BOPOMOFO_FINAL].bopomofoToPhone["ㄥ"] {
+		phone &^= BOPOMOFO_TABLE[BOPOMOFO_FINAL].mask
+		phone |= BOPOMOFO_TABLE[BOPOMOFO_FINAL].bopomofoToPhone["ㄣ"]
+	}
 
 	return phone
 }
