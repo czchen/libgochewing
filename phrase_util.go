@@ -6,20 +6,16 @@ import (
 	"unicode/utf8"
 )
 
-type Word struct {
-	word rune
-}
-
 type Phrase struct {
 	frequency uint32
-	phrase    []Word
+	phrase    []rune
 }
 
 func newPhrase(str string, frequency uint32) (phrase *Phrase, err error) {
 	strLen := utf8.RuneCountInString(str)
 
 	phrase = new(Phrase)
-	phrase.phrase = make([]Word, strLen)
+	phrase.phrase = make([]rune, strLen)
 
 	for i := 0; i < strLen; i++ {
 		r, size := utf8.DecodeRuneInString(str)
@@ -27,7 +23,7 @@ func newPhrase(str string, frequency uint32) (phrase *Phrase, err error) {
 			return nil, errors.New(fmt.Sprintf("`%s' contains invalid UTF8 character", str))
 		}
 
-		phrase.phrase[i].word = r
+		phrase.phrase[i] = r
 
 		str = str[size:]
 	}
@@ -42,7 +38,7 @@ func isTheSamePhrase(x *Phrase, y *Phrase) bool {
 	}
 
 	for i := 0; i < len(x.phrase); i++ {
-		if x.phrase[i].word != y.phrase[i].word {
+		if x.phrase[i] != y.phrase[i] {
 			return false
 		}
 	}
