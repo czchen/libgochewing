@@ -123,5 +123,6 @@ func (this *Chewing) SetKeyboardType(keyboard int) error {
 	if keyboard < KEYBOARD_MIN || keyboard > KEYBOARD_MAX {
 		return errors.New(fmt.Sprintf("illegal keyboard type %d", keyboard))
 	}
+	this.keyboardType = keyboard
 	return nil
 }
